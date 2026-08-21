@@ -143,8 +143,24 @@ button{font-family:inherit}
 .pill{padding:7px 11px;border-radius:8px;border:1px solid var(--btn-border);background:var(--btn-bg);color:var(--btn-fg);font-size:12px;font-weight:700;cursor:pointer}
 .pill[aria-pressed="true"]{background:var(--accent);color:var(--accent-on);border-color:transparent}
 .chk{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--head-fg);font-weight:700;cursor:pointer}
+.chk2{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:12.5px;color:var(--title-fg);cursor:pointer}
+.chk2 input{width:15px;height:15px;accent-color:var(--accent);flex:none}
 .chk input{width:16px;height:16px;accent-color:var(--accent)}
 .hintline{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+/* 定期タスク */
+.holrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0 2px}
+.hint{font-size:11.5px;color:var(--muted)}
+#holUpdate{padding:6px 10px;font-size:11.5px;flex:none}
+.recurlist{list-style:none;display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.recurlist:empty::after{content:"（まだ登録がありません）";color:var(--muted);font-size:12px}
+.recuritem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:var(--task-bg);border:1px solid var(--task-border)}
+.recuritem .ri-body{flex:1;min-width:0}
+.recuritem .ri-title{font-size:13px;font-weight:600;color:var(--title-fg);word-break:break-word}
+.recuritem .ri-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.recuritem .ri-del{border:none;background:none;color:var(--muted);cursor:pointer;font-size:14px;width:26px;height:26px;border-radius:7px;flex:none}
+.recuritem .ri-del:hover{background:var(--task-hover);color:var(--title-fg)}
+#r-weekdays .pill.wd{padding:7px 0;flex:1;min-width:0;text-align:center}
+.chip.recur{background:var(--chip-bg);color:var(--chip-fg)}
 
 /* ---------- トースト ---------- */
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);z-index:50;padding:9px 16px;border-radius:11px;
@@ -229,10 +245,10 @@ button{font-family:inherit}
     </section>
 
     <section class="col col-week" data-list="week">
-      <div class="colhead"><span class="tag">THIS WEEK</span><h2>今週中のタスク</h2><span class="later" id="later-week" hidden></span><span class="count" id="count-week">0 / 0</span></div>
+      <div class="colhead"><span class="tag">2 WEEKS</span><h2>2週間以内のタスク</h2><span class="later" id="later-week" hidden></span><span class="count" id="count-week">0 / 0</span></div>
       <ul class="list" id="list-week"></ul>
       <div class="donebar" id="donebar-week" hidden><span id="donelabel-week"></span><button data-act="toggledone" data-list="week">表示</button><span class="sp"></span><button data-act="cleardone" data-list="week">完了を消す</button></div>
-      <div class="quickadd"><input id="q-week" placeholder="今週にサッと追加（!で優先）"></div>
+      <div class="quickadd"><input id="q-week" placeholder="2週間以内にサッと追加（!で優先）"></div>
     </section>
   </main>
 
@@ -262,7 +278,7 @@ button{font-family:inherit}
     </div>
     <div class="fld"><span>作業する週</span>
       <div class="seg2" id="f-week"><button class="pill" data-w="this" type="button">今週</button><button class="pill" data-w="next" type="button">来週</button><button class="pill" data-w="none" type="button">指定なし</button></div>
-      <small class="hintline">「作業する日」を入れた場合は、その日が優先されます。</small>
+      <small class="hintline">今週・来週のタスクは「2週間以内」に表示されます（「作業する日」を入れた場合はその日が優先）。</small>
     </div>
     <label class="chk"><input id="f-prio" type="checkbox"> 優先（先頭に表示）</label>
     <div class="row"><button class="btn primary full" id="f-save">保存</button><button class="btn" data-close>キャンセル</button></div>
@@ -281,10 +297,15 @@ button{font-family:inherit}
       <input type="file" id="importFile" accept="application/json,.json" hidden>
     </div>
     <hr>
+    <h3 style="font-size:14px">定期タスク</h3>
+    <p>毎日／毎週◯曜／毎月◯日にくり返すタスクを登録すると、その日が来ると自動でボードに出ます。</p>
+    <div class="row" style="margin-top:8px"><button class="btn primary" id="openRecurBtn">🔁 定期タスクを管理</button></div>
+    <hr>
     <h3 style="font-size:14px">使い方</h3>
     <ul>
       <li><b>追加</b>：「＋ タスクを追加」で締め切り・作業日・作業週を設定</li>
-      <li><b>自動表示</b>：作業日が今日なら「本日」、作業週が今週なら「今週」に自動表示。日が来れば自動で繰り上がります</li>
+      <li><b>定期タスク</b>：上の「🔁 定期タスクを管理」で、くり返しを登録（自動でボードに出ます）</li>
+      <li><b>自動表示</b>：作業日が今日なら「本日」、2週間以内なら「2週間以内」に自動表示。日が来れば自動で繰り上がります</li>
       <li><b>完了</b>：丸をクリック → 「完了」へ。<code>完了を消す</code>で削除（元に戻せます）</li>
       <li><b>編集</b>：タスクの ✎ ／ <b>優先</b>：☆ ／ <b>削除</b>：✕</li>
       <li><b>目隠し</b>：右上 ◑ または <code>Esc</code>（授業前に中身を時計表示へ）</li>
@@ -296,6 +317,59 @@ button{font-family:inherit}
       <li><b>アプリとして入れる場合</b>：<code>https</code>（GitHub Pages）で開くと Edge/Chrome の「アプリとしてインストール」が選べます。<b>ローカルファイル（file://）では選べません</b></li>
       <li>詳しくは同フォルダの <code>README.md</code></li>
     </ul>
+  </div>
+</div>
+
+<!-- 定期タスク -->
+<div class="modal" id="recurModal">
+  <div class="sheet">
+    <button class="close" data-close>×</button>
+    <h3>🔁 定期タスク</h3>
+    <p>登録すると、該当日（今日〜2週間以内）に自動でボードへ表示されます。</p>
+    <div class="holrow"><span id="holStatus" class="hint">祝日：内蔵（2024〜2035）</span><button class="btn" id="holUpdate">祝日をオンライン更新</button></div>
+    <ul class="recurlist" id="recurList"></ul>
+    <hr>
+    <h3 style="font-size:14px">新しい定期タスク</h3>
+    <label class="fld"><span>タスク名</span><input id="r-title" type="text" placeholder="例：進度予定表を提出" autocomplete="off"></label>
+    <div class="fld"><span>くり返し</span>
+      <div class="seg2" id="r-freq">
+        <button class="pill" data-f="daily" type="button">毎日</button>
+        <button class="pill" data-f="weekly" type="button">毎週</button>
+        <button class="pill" data-f="monthly" type="button">毎月</button>
+      </div>
+    </div>
+    <div class="fld" id="r-week-fld"><span>曜日（複数えらべます）</span>
+      <div class="seg2" id="r-weekdays">
+        <button class="pill wd" data-d="0" type="button">日</button>
+        <button class="pill wd" data-d="1" type="button">月</button>
+        <button class="pill wd" data-d="2" type="button">火</button>
+        <button class="pill wd" data-d="3" type="button">水</button>
+        <button class="pill wd" data-d="4" type="button">木</button>
+        <button class="pill wd" data-d="5" type="button">金</button>
+        <button class="pill wd" data-d="6" type="button">土</button>
+      </div>
+    </div>
+    <div class="fld" id="r-month-fld"><span>毎月の日にち</span>
+      <div class="qrow"><input id="r-monthday" type="number" min="1" max="31" value="1"> 日
+        <small class="hintline">その月に無い日（例：31日）は、その月はスキップされます。</small>
+      </div>
+    </div>
+    <div class="fld"><span>祝日にあたるとき（任意）</span>
+      <label class="chk2"><input type="checkbox" id="r-before"> 前の平日にずらす（土日祝を除く）</label>
+      <label class="chk2"><input type="checkbox" id="r-after"> 次の平日にずらす（土日祝を除く）</label>
+      <small class="hintline">チェックしないと、祝日でもその日のまま登録します。</small>
+    </div>
+    <label class="chk"><input id="r-prio" type="checkbox"> 優先（先頭に表示）</label>
+    <div class="row"><button class="btn primary full" id="r-add">この定期タスクを追加</button></div>
+    <hr>
+    <h3 style="font-size:14px">おやすみ期間（この間は定期タスクを止める）</h3>
+    <p>夏休み・冬休みなどを登録すると、その期間は定期タスクが出なくなります（すでに出ている定期タスクも消えます）。</p>
+    <ul class="recurlist" id="breakList"></ul>
+    <div class="fld"><span>期間を追加</span>
+      <div class="qrow"><input id="b-start" type="date"> 〜 <input id="b-end" type="date"></div>
+    </div>
+    <label class="fld"><span>名前（任意）</span><input id="b-label" type="text" placeholder="例：夏休み" autocomplete="off"></label>
+    <div class="row"><button class="btn" id="b-add">おやすみ期間を追加</button></div>
   </div>
 </div>
 
@@ -328,32 +402,143 @@ button{font-family:inherit}
       {id:uid(),title:'「＋ タスクを追加」から登録できます',deadline:'',workDate:t,workWeek:'',prio:false,done:false,t:Date.now()+3},
       {id:uid(),title:'作業日が今日のものは自動でここに出ます',deadline:'',workDate:t,workWeek:'',prio:false,done:false,t:Date.now()+2},
       {id:uid(),title:'中間テスト作問',deadline:addDaysStr(t,3),workDate:'',workWeek:mon,prio:true,done:false,t:Date.now()+1},
-      {id:uid(),title:'作業週が今週のものはこちらに出ます',deadline:'',workDate:'',workWeek:mon,prio:false,done:false,t:Date.now()}
-    ], showDone:{today:false,week:false}};
+      {id:uid(),title:'作業週や作業日が2週間以内のものはここに出ます',deadline:'',workDate:'',workWeek:mon,prio:false,done:false,t:Date.now()}
+    ], showDone:{today:false,week:false}, recurring:[], recurredKeys:[], recurBreaks:[]};
   }
   function load(){
     var raw=lsGet(SKEY);
-    if(raw){try{var d=JSON.parse(raw);if(d&&Array.isArray(d.tasks)){state=d;if(!state.showDone)state.showDone={today:false,week:false};return;}}catch(e){}}
+    if(raw){try{var d=JSON.parse(raw);if(d&&Array.isArray(d.tasks)){state=d;if(!state.showDone)state.showDone={today:false,week:false};if(!state.recurring)state.recurring=[];if(!state.recurredKeys)state.recurredKeys=[];if(!state.recurBreaks)state.recurBreaks=[];return;}}catch(e){}}
     state=defaultState();
   }
   function save(){lsSet(SKEY,JSON.stringify(state));}
   function uid(){return 'x'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3);}
   function byId(id){for(var i=0;i<state.tasks.length;i++)if(state.tasks[i].id===id)return state.tasks[i];return null;}
 
+  /* ---------- 定期タスク（くり返し）の自動生成 ---------- */
+  var WDN=['日','月','火','水','木','金','土'];
+  /* 日本の祝日（内蔵テーブル：2024〜2035。通信不要・完全オフライン。振替休日・国民の休日を含む） */
+  var JP_HOLIDAYS=new Set(["2024-01-01","2024-01-08","2024-02-11","2024-02-12","2024-02-23","2024-03-20","2024-04-29","2024-05-03","2024-05-04","2024-05-05","2024-05-06","2024-07-15","2024-08-11","2024-08-12","2024-09-16","2024-09-22","2024-09-23","2024-10-14","2024-11-03","2024-11-04","2024-11-23","2025-01-01","2025-01-13","2025-02-11","2025-02-23","2025-02-24","2025-03-20","2025-04-29","2025-05-03","2025-05-04","2025-05-05","2025-05-06","2025-07-21","2025-08-11","2025-09-15","2025-09-23","2025-10-13","2025-11-03","2025-11-23","2025-11-24","2026-01-01","2026-01-12","2026-02-11","2026-02-23","2026-03-20","2026-04-29","2026-05-03","2026-05-04","2026-05-05","2026-05-06","2026-07-20","2026-08-11","2026-09-21","2026-09-22","2026-09-23","2026-10-12","2026-11-03","2026-11-23","2027-01-01","2027-01-11","2027-02-11","2027-02-23","2027-03-21","2027-03-22","2027-04-29","2027-05-03","2027-05-04","2027-05-05","2027-07-19","2027-08-11","2027-09-20","2027-09-23","2027-10-11","2027-11-03","2027-11-23","2028-01-01","2028-01-10","2028-02-11","2028-02-23","2028-03-20","2028-04-29","2028-05-03","2028-05-04","2028-05-05","2028-07-17","2028-08-11","2028-09-18","2028-09-22","2028-10-09","2028-11-03","2028-11-23","2029-01-01","2029-01-08","2029-02-11","2029-02-12","2029-02-23","2029-03-20","2029-04-29","2029-04-30","2029-05-03","2029-05-04","2029-05-05","2029-07-16","2029-08-11","2029-09-17","2029-09-23","2029-09-24","2029-10-08","2029-11-03","2029-11-23","2030-01-01","2030-01-14","2030-02-11","2030-02-23","2030-03-20","2030-04-29","2030-05-03","2030-05-04","2030-05-05","2030-05-06","2030-07-15","2030-08-11","2030-08-12","2030-09-16","2030-09-23","2030-10-14","2030-11-03","2030-11-04","2030-11-23","2031-01-01","2031-01-13","2031-02-11","2031-02-23","2031-02-24","2031-03-21","2031-04-29","2031-05-03","2031-05-04","2031-05-05","2031-05-06","2031-07-21","2031-08-11","2031-09-15","2031-09-23","2031-10-13","2031-11-03","2031-11-23","2031-11-24","2032-01-01","2032-01-12","2032-02-11","2032-02-23","2032-03-20","2032-04-29","2032-05-03","2032-05-04","2032-05-05","2032-07-19","2032-08-11","2032-09-20","2032-09-21","2032-09-22","2032-10-11","2032-11-03","2032-11-23","2033-01-01","2033-01-10","2033-02-11","2033-02-23","2033-03-20","2033-03-21","2033-04-29","2033-05-03","2033-05-04","2033-05-05","2033-07-18","2033-08-11","2033-09-19","2033-09-23","2033-10-10","2033-11-03","2033-11-23","2034-01-01","2034-01-02","2034-01-09","2034-02-11","2034-02-23","2034-03-20","2034-04-29","2034-05-03","2034-05-04","2034-05-05","2034-07-17","2034-08-11","2034-09-18","2034-09-23","2034-10-09","2034-11-03","2034-11-23","2035-01-01","2035-01-08","2035-02-11","2035-02-12","2035-02-23","2035-03-21","2035-04-29","2035-04-30","2035-05-03","2035-05-04","2035-05-05","2035-07-16","2035-08-11","2035-09-17","2035-09-23","2035-09-24","2035-10-08","2035-11-03","2035-11-23"]);
+  /* オンライン取得した祝日データ（内蔵テーブルより優先。年単位で上書き） */
+  var HKEY='taskboard.holidays';
+  var holUserDates=null, holUserYears=null;
+  function isHoliday(dstr){
+    if(holUserYears && holUserYears.has(dstr.slice(0,4))) return holUserDates.has(dstr); // 取得済みの年はそちらを優先
+    return JP_HOLIDAYS.has(dstr);
+  }
+  function loadHolidayData(){
+    try{var raw=lsGet(HKEY);if(raw){var d=JSON.parse(raw);if(d&&d.dates&&d.years){holUserDates=new Set(d.dates);holUserYears=new Set(d.years);return d.fetchedAt||'';}}}catch(e){}
+    return '';
+  }
+  function holidayFetchedAt(){try{var raw=lsGet(HKEY);if(raw){var d=JSON.parse(raw);return d.fetchedAt||'';}}catch(e){}return '';}
+  function updateHolidayStatus(){
+    var el=document.getElementById('holStatus'); if(!el)return;
+    var fa=holidayFetchedAt();
+    el.textContent = fa ? ('祝日：オンライン取得済み（'+fa.replace(/-/g,'/')+'）') : '祝日：内蔵（2024〜2035）';
+  }
+  function refreshHolidays(silent){
+    if(!(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')){
+      if(!silent)showToast('オンライン（https）で開いたときに更新できます'); return Promise.resolve(false);
+    }
+    if(!silent)showToast('祝日カレンダーを取得中…');
+    return fetch('https://holidays-jp.github.io/api/v1/date.json',{cache:'no-store'})
+      .then(function(r){if(!r.ok)throw 0;return r.json();})
+      .then(function(obj){
+        var dates=Object.keys(obj||{}).filter(function(k){return /^\d{4}-\d{2}-\d{2}$/.test(k);});
+        if(!dates.length)throw 0;
+        var ys={}; dates.forEach(function(k){ys[k.slice(0,4)]=1;});
+        var rec={fetchedAt:todayStr(),dates:dates,years:Object.keys(ys)};
+        lsSet(HKEY,JSON.stringify(rec));
+        holUserDates=new Set(dates); holUserYears=new Set(rec.years);
+        generateRecurring(); save(); render(); updateHolidayStatus();
+        if(!silent)showToast('祝日カレンダーを更新しました（'+rec.years.length+'年分）');
+        return true;
+      })
+      .catch(function(){ if(!silent)showToast('更新できませんでした（通信環境をご確認ください）'); return false; });
+  }
+  function isOffDay(dstr){var w=parseYmd(dstr).getDay();return w===0||w===6||isHoliday(dstr);} // 土日祝
+  // 祝日にあたるときだけ、前/後の平日（土日祝を除く）へずらす
+  function shiftForHoliday(dstr,mode){
+    if(!mode||mode==='none')return dstr;
+    if(!isHoliday(dstr))return dstr;
+    var step=(mode==='before')?-1:1, d=dstr, guard=0;
+    do{ d=addDaysStr(d,step); }while(isOffDay(d) && guard++<40);
+    return d;
+  }
+  function occursOn(r,dstr){
+    var d=parseYmd(dstr);
+    if(r.freq==='daily')return true;
+    if(r.freq==='weekly')return (r.weekdays||[]).indexOf(d.getDay())>=0;
+    if(r.freq==='monthly')return d.getDate()===(+r.monthday||1);
+    return false;
+  }
+  function recurSummary(r){
+    var s='';
+    if(r.freq==='daily')s='毎日';
+    else if(r.freq==='weekly')s='毎週 '+((r.weekdays||[]).slice().sort().map(function(w){return WDN[w];}).join('・'))+'曜';
+    else if(r.freq==='monthly')s='毎月 '+(+r.monthday||1)+'日';
+    if(r.holidayShift==='before')s+=' ・祝日は前の平日へ';
+    else if(r.holidayShift==='after')s+=' ・祝日は次の平日へ';
+    return s;
+  }
+  function inBreak(dstr){
+    var br=state.recurBreaks||[];
+    for(var i=0;i<br.length;i++){ if(br[i].start&&br[i].end&&dstr>=br[i].start&&dstr<=br[i].end)return true; }
+    return false;
+  }
+  function generateRecurring(){
+    if(!state.recurring||!state.recurredKeys)return 0;
+    if(!state.recurBreaks)state.recurBreaks=[];
+    var today=todayStr(), horizon=addDaysStr(today,14), added=0;
+    // おやすみ期間に入った自動タスク（未完了）を取り除き、生成キーも解放（期間を消せば復活できるように）
+    if(state.recurBreaks.length){
+      var freed={}, keep=[];
+      state.tasks.forEach(function(t){
+        if(t.recurringId && !t.done && inBreak(t.workDate)){ if(t.recurKey)freed[t.recurKey]=1; }
+        else keep.push(t);
+      });
+      if(keep.length!==state.tasks.length){
+        state.tasks=keep;
+        state.recurredKeys=state.recurredKeys.filter(function(k){return !freed[k];});
+      }
+    }
+    state.recurring.forEach(function(r){
+      var end=(r.freq==='daily')?today:horizon;      // 毎日は当日のみ生成（増えすぎ防止）
+      var d=today, guard=0;
+      while(d<=end && guard++<400){
+        if(occursOn(r,d)){
+          var wd=shiftForHoliday(d, r.holidayShift);   // 祝日なら前/後の平日へずらす
+          if(!inBreak(wd)){                             // おやすみ期間は生成しない
+            var key=r.id+'|'+d;
+            if(state.recurredKeys.indexOf(key)<0){
+              state.recurredKeys.push(key);
+              state.tasks.push({id:uid(),title:r.title,deadline:'',workDate:wd,workWeek:'',prio:!!r.prio,done:false,recurringId:r.id,recurKey:key,t:Date.now()+added});
+              added++;
+            }
+          }
+        }
+        d=addDaysStr(d,1);
+      }
+    });
+    // 30日より前の生成キーは掃除（無限増加防止）
+    var cutoff=addDaysStr(today,-30);
+    state.recurredKeys=state.recurredKeys.filter(function(k){return (k.split('|')[1]||'')>=cutoff;});
+    return added;
+  }
+
   /* ---------- 振り分けロジック ---------- */
-  // 'today' | 'week' | 'later'（未来＝まだ表示しない）
+  // 'today' | 'week'（=本日を除く2週間以内） | 'later'（15日以降＝まだ表示しない）
   function sectionOf(t){
-    var today=todayStr(), mon=mondayOf(today);
+    var today=todayStr(), horizon=addDaysStr(today,14);
     if(t.workDate){
       if(t.workDate<=today)return 'today';                 // 今日 or 繰越（期限超過）
-      if(mondayOf(t.workDate)===mon)return 'week';          // 今週の後日
-      return 'later';                                       // 来週以降
+      if(t.workDate<=horizon)return 'week';                // 明日〜14日後 → 2週間以内
+      return 'later';                                       // 15日以降
     }
     if(t.workWeek){
-      if(t.workWeek<=mon)return 'week';                     // 今週 or 繰越週
-      return 'later';                                       // 来週以降
+      if(t.workWeek<=horizon)return 'week';                // 今週/来週/繰越週 → 2週間以内
+      return 'later';                                       // それ以降
     }
-    return 'week';                                          // 未設定は今週バックログ
+    return 'week';                                          // 未設定は2週間以内（バックログ）
   }
   function compareTasks(a,b){
     if(a.prio!==b.prio)return a.prio?-1:1;
@@ -382,7 +567,7 @@ button{font-family:inherit}
       var done=buckets[list].done.slice().sort(compareTasks);
       if(open.length===0 && (!state.showDone[list]||done.length===0)){
         var li=document.createElement('li');li.className='empty';
-        li.textContent=(done.length?'すべて完了しました 🎉':(list==='today'?'本日のタスクはありません':'今週のタスクはありません'));
+        li.textContent=(done.length?'すべて完了しました 🎉':(list==='today'?'本日のタスクはありません':'2週間以内のタスクはありません'));
         ul.appendChild(li);
       }
       open.forEach(function(t){ul.appendChild(taskEl(t,list));});
@@ -402,12 +587,18 @@ button{font-family:inherit}
   function chipsFor(t,list){
     var out=[];
     if(t.prio)out.push(['prio','優先']);
+    if(t.recurringId)out.push(['recur','🔁']);
     if(list==='today'){
       if(t.workDate&&t.workDate<todayStr())out.push(['sched urgent','繰越']);
-    }else{ // week
-      if(t.workDate)out.push(['sched',wdShort(t.workDate)+' '+fmtMD(t.workDate)]);
-      else if(t.workWeek&&t.workWeek<mondayOf(todayStr()))out.push(['sched urgent','今週(繰越)']);
-      else out.push(['sched','今週']);
+    }else{ // week = 2週間以内
+      if(t.workDate){
+        out.push(['sched',wdShort(t.workDate)+' '+fmtMD(t.workDate)]);
+      }else if(t.workWeek){
+        var mon=mondayOf(todayStr()), nextMon=addDaysStr(mon,7);
+        if(t.workWeek<mon)out.push(['sched urgent','今週(繰越)']);
+        else if(t.workWeek>=nextMon)out.push(['sched','来週']);
+        else out.push(['sched','今週']);
+      }
     }
     if(t.deadline){
       var urg=t.deadline<todayStr()?' urgent':(t.deadline===todayStr()?' urgent':'');
@@ -533,10 +724,12 @@ button{font-family:inherit}
   document.getElementById('cover').addEventListener('click',toggleCover);
 
   /* ---------- 時計 ---------- */
+  var lastGenDate='';
   function tick(){var n=new Date();
     var dd=(n.getMonth()+1)+'.'+n.getDate()+'（'+WD[n.getDay()]+'）', tt=pad(n.getHours())+':'+pad(n.getMinutes());
     document.getElementById('dateStr').textContent=dd+' '+tt;
     document.getElementById('coverTime').textContent=tt;document.getElementById('coverDate').textContent=dd;
+    var ts=todayStr(); if(ts!==lastGenDate){lastGenDate=ts; generateRecurring(); render();}   // 日付が変わったら定期タスクを反映
   }
 
   /* ---------- トースト / モーダル ---------- */
@@ -549,6 +742,81 @@ button{font-family:inherit}
   function closeModals(){var m=document.querySelectorAll('.modal.open');for(var i=0;i<m.length;i++)m[i].classList.remove('open');}
   document.getElementById('menuBtn').addEventListener('click',function(){openModal('menuModal');});
   document.querySelectorAll('.modal').forEach(function(m){m.addEventListener('click',function(e){if(e.target===m||e.target.hasAttribute('data-close'))closeModals();});});
+
+  /* ---------- 定期タスク UI ---------- */
+  var RF={freq:document.getElementById('r-freq'),wk:document.getElementById('r-weekdays'),weekFld:document.getElementById('r-week-fld'),monthFld:document.getElementById('r-month-fld'),title:document.getElementById('r-title'),monthday:document.getElementById('r-monthday'),prio:document.getElementById('r-prio'),before:document.getElementById('r-before'),after:document.getElementById('r-after')};
+  RF.before.addEventListener('change',function(){if(RF.before.checked)RF.after.checked=false;}); // 前後は同時に選べない
+  RF.after.addEventListener('change',function(){if(RF.after.checked)RF.before.checked=false;});
+  function setRecFreq(f){
+    var b=RF.freq.querySelectorAll('.pill');for(var i=0;i<b.length;i++)b[i].setAttribute('aria-pressed',String(b[i].dataset.f===f));
+    RF.weekFld.style.display=(f==='weekly')?'':'none';
+    RF.monthFld.style.display=(f==='monthly')?'':'none';
+  }
+  function getRecFreq(){var b=RF.freq.querySelector('.pill[aria-pressed="true"]');return b?b.dataset.f:'weekly';}
+  function getRecWeekdays(){var r=[],b=RF.wk.querySelectorAll('.pill');for(var i=0;i<b.length;i++)if(b[i].getAttribute('aria-pressed')==='true')r.push(+b[i].dataset.d);return r;}
+  RF.freq.addEventListener('click',function(e){var b=e.target.closest('.pill');if(b)setRecFreq(b.dataset.f);});
+  RF.wk.addEventListener('click',function(e){var b=e.target.closest('.pill');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');});
+  function renderRecurList(){
+    var ul=document.getElementById('recurList');ul.innerHTML='';
+    (state.recurring||[]).forEach(function(r){
+      var li=document.createElement('li');li.className='recuritem';
+      var body=document.createElement('div');body.className='ri-body';
+      var tt=document.createElement('div');tt.className='ri-title';tt.textContent=(r.prio?'★ ':'')+r.title;
+      var sub=document.createElement('div');sub.className='ri-sub';sub.textContent=recurSummary(r);
+      body.appendChild(tt);body.appendChild(sub);
+      var del=document.createElement('button');del.className='ri-del';del.textContent='✕';del.title='この定期タスクを削除';
+      del.addEventListener('click',function(){
+        state.recurring=state.recurring.filter(function(x){return x.id!==r.id;});
+        save();renderRecurList();showToast('定期タスクを削除しました（登録済みのぶんは残ります）');
+      });
+      li.appendChild(body);li.appendChild(del);ul.appendChild(li);
+    });
+  }
+  function fmtBreak(d){return (d||'').replace(/-/g,'/');}
+  function renderBreakList(){
+    var ul=document.getElementById('breakList');ul.innerHTML='';
+    (state.recurBreaks||[]).slice().sort(function(a,b){return (a.start<b.start)?-1:1;}).forEach(function(bk){
+      var li=document.createElement('li');li.className='recuritem';
+      var body=document.createElement('div');body.className='ri-body';
+      var tt=document.createElement('div');tt.className='ri-title';tt.textContent=bk.label||'おやすみ';
+      var sub=document.createElement('div');sub.className='ri-sub';sub.textContent=fmtBreak(bk.start)+' 〜 '+fmtBreak(bk.end);
+      body.appendChild(tt);body.appendChild(sub);
+      var del=document.createElement('button');del.className='ri-del';del.textContent='✕';del.title='この期間を削除';
+      del.addEventListener('click',function(){
+        state.recurBreaks=state.recurBreaks.filter(function(x){return x.id!==bk.id;});
+        generateRecurring();save();render();renderBreakList();showToast('おやすみ期間を削除しました');
+      });
+      li.appendChild(body);li.appendChild(del);ul.appendChild(li);
+    });
+  }
+  var BF={start:document.getElementById('b-start'),end:document.getElementById('b-end'),label:document.getElementById('b-label')};
+  document.getElementById('b-add').addEventListener('click',function(){
+    var s=BF.start.value, e=BF.end.value;
+    if(!s||!e){showToast('開始日と終了日を入れてください');return;}
+    if(s>e){showToast('終了日は開始日より後にしてください');return;}
+    state.recurBreaks.push({id:uid(),start:s,end:e,label:BF.label.value.trim()});
+    generateRecurring();save();render();renderBreakList();
+    BF.start.value='';BF.end.value='';BF.label.value='';
+    showToast('おやすみ期間を追加しました');
+  });
+  function openRecur(){
+    setRecFreq('weekly');
+    var b=RF.wk.querySelectorAll('.pill');for(var i=0;i<b.length;i++)b[i].setAttribute('aria-pressed','false');
+    RF.title.value='';RF.monthday.value='1';RF.prio.checked=false;RF.before.checked=false;RF.after.checked=false;
+    renderRecurList();renderBreakList();updateHolidayStatus();BF.start.value='';BF.end.value='';BF.label.value='';openModal('recurModal');setTimeout(function(){RF.title.focus();},30);
+  }
+  document.getElementById('openRecurBtn').addEventListener('click',function(){closeModals();openRecur();});
+  document.getElementById('holUpdate').addEventListener('click',function(){refreshHolidays(false);});
+  document.getElementById('r-add').addEventListener('click',function(){
+    var title=RF.title.value.trim();if(!title){RF.title.focus();return;}
+    var f=getRecFreq(), rule={id:uid(),title:title,prio:RF.prio.checked,freq:f,weekdays:[],monthday:1,holidayShift:(RF.before.checked?'before':(RF.after.checked?'after':'none')),t:Date.now()};
+    if(f==='weekly'){rule.weekdays=getRecWeekdays();if(!rule.weekdays.length){showToast('曜日を1つ以上えらんでください');return;}}
+    else if(f==='monthly'){var md=parseInt(RF.monthday.value,10);if(!(md>=1&&md<=31)){showToast('1〜31の日にちを入れてください');return;}rule.monthday=md;}
+    state.recurring.push(rule);
+    generateRecurring();save();render();renderRecurList();
+    RF.title.value='';RF.prio.checked=false;RF.before.checked=false;RF.after.checked=false;
+    showToast('定期タスクを追加しました');
+  });
 
   /* ---------- バックアップ ---------- */
   document.getElementById('exportBtn').addEventListener('click',function(){
@@ -573,7 +841,12 @@ button{font-family:inherit}
 
   /* ---------- 起動 ---------- */
   setTheme(lsGet(TKEY)||'neon');
-  load();tick();render();setInterval(tick,1000*15);
+  load();var _fa=loadHolidayData();generateRecurring();lastGenDate=todayStr();tick();render();updateHolidayStatus();setInterval(tick,1000*15);
+  // 年1回程度、オンラインで最新の祝日を取り込む（オフライン/失敗時は内蔵テーブルのまま）
+  try{
+    var _ty=todayStr(), _need=!_fa || !(holUserYears&&holUserYears.has(_ty.slice(0,4))) || _fa<addDaysStr(_ty,-150);
+    if(_need && navigator.onLine!==false) refreshHolidays(true);
+  }catch(e){}
 
   /* ---------- オフライン対応（https/localhost のときだけ。file:// では何もしない） ---------- */
   try{
